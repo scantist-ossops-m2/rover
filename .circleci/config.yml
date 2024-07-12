@@ -369,7 +369,7 @@ jobs:
           name: "Invoke Install Scripts"
           command: |
             cd rover\installers\binstall\scripts\windows
-            type install.ps1 | iex     
+            iex ./install.ps1 ""
             cd C:\Users\circleci\.rover\bin
             ./rover --version
 
