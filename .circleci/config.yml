@@ -170,6 +170,8 @@ workflows:
           matrix:
             parameters:
               package_manager: [npm, npm_global, pnpm]
+      - install_win:
+          name: Test installation for Windows (amd_windows)
       - node/test:
           name: Test NPM Installer Scripts
           app-dir: "~/project/installers/npm"
@@ -217,6 +219,10 @@ workflows:
               package_manager: [ npm, npm_global, pnpm ]
           <<: *run_release
 
+      - install_win:
+          name: Test installation for Windows (amd_windows)
+          <<: *run_release
+
       - node/test:
           name: Test NPM Installer Scripts
           app-dir: "~/project/installers/npm"
@@ -242,6 +248,7 @@ workflows:
             - "Test installation for Javascript Package Managers (npm)"
             - "Test installation for Javascript Package Managers (npm_global)"
             - "Test installation for Javascript Package Managers (pnpm)"
+            - "Test installation for Windows (amd_windows)"
             - "Test NPM Installer Scripts"
           <<: *run_release
 
@@ -352,6 +359,19 @@ jobs:
           command: |
             cd rover/.circleci/scripts
             ./install_<< parameters.package_manager >>.sh
+
+  install_win:
+    executor: amd_windows
+    steps:
+      - checkout:
+          path: "rover"
+      - run:
+          name: "Invoke Install Scripts"
+          command: |
+            cd rover\installers\binstall\scripts\windows
+            type install.ps1 | iex     
+            cd C:\Users\circleci\.rover\bin
+            ./rover --version
 
 # reusable command snippets can be referred to in any `steps` object
 commands:
